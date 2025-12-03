@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Жаныбарлар дүйнөсү </title>
+    <title>Жаныбарлар дүйнөсү</title>
     <style>
         * {
             margin: 0;
@@ -304,29 +304,6 @@
             }
         }
 
-        .download-notice {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            color: #856404;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px;
-            text-align: center;
-            font-size: 1.1em;
-        }
-
-        .download-notice h3 {
-            color: #e74c3c;
-            margin-bottom: 15px;
-        }
-
-        .download-notice ol {
-            text-align: left;
-            max-width: 600px;
-            margin: 15px auto;
-            line-height: 1.8;
-        }
-
         footer {
             background: rgba(255, 255, 255, 0.95);
             text-align: center;
@@ -340,14 +317,15 @@
     <header>
         <h1>🐾 Жаныбарлар дүйнөсү 🦁</h1>
         <p class="subtitle">Уй жаныбарлары жана жапайы жаныбарлар жөнүндө</p>
+        <div id="firebase-status" class="firebase-status loading">🔄 Жүктөлүүдө...</div>
     </header>
 
     <nav>
-        <button class="nav-btn active" onclick="showSection('home')">Башкы бет</button>
-        <button class="nav-btn" onclick="showSection('pets')">Уй жаныбарлары</button>
-        <button class="nav-btn" onclick="showSection('wild')">Жапайы жаныбарлар</button>
-        <button class="nav-btn" onclick="showSection('facts')">Кызыктуу фактылар</button>
-        <button class="nav-btn admin-btn" onclick="showSection('admin')">👤 Админ панель</button>
+        <button class="nav-btn active" data-section="home">Башкы бет</button>
+        <button class="nav-btn" data-section="pets">Уй жаныбарлары</button>
+        <button class="nav-btn" data-section="wild">Жапайы жаныбарлар</button>
+        <button class="nav-btn" data-section="facts">Кызыктуу фактылар</button>
+        <button class="nav-btn admin-btn" data-section="admin">👤 Админ панель</button>
     </nav>
 
     <div class="container">
@@ -356,7 +334,7 @@
                 <h2>Жаныбарлар дүйнөсүнө кош келиңиз!</h2>
                 <p>Бул сайтта сиз уй жаныбарлары жана жапайы жаныбарлар жөнүндө көптөгөн кызыктуу маалыматтарды таба аласыз. Жаныбарлар биздин планетабыздын эң кереметтүү жандыктары!</p>
                 <p style="margin-top: 15px;">👆 Жогорудагы баскычтарды басып, түрдүү жаныбарлар менен таанышыңыз!</p>
-                <p style="margin-top: 15px; color: #e74c3c; font-weight: bold;">🔥 Firebase менен - Маалыматтар булутта коопсуз сакталат!</p>
+                <p style="margin-top: 15px; color: #e74c3c; font-weight: bold;">🔥 Firebase менен - Маалыматтар булутта сакталат!</p>
             </div>
         </div>
 
@@ -383,40 +361,38 @@
                     ✅ Жаныбар Firebase'ге жазылды!
                 </div>
 
-                <form id="animal-form" onsubmit="return false;">
-                    <div class="form-group">
-                        <label>Категория:</label>
-                        <select id="category" required>
-                            <option value="">Тандаңыз...</option>
-                            <option value="pets">Уй жаныбарлары</option>
-                            <option value="wild">Жапайы жаныбарлар</option>
-                            <option value="facts">Кызыктуу фактылар</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label>Категория:</label>
+                    <select id="category" required>
+                        <option value="">Тандаңыз...</option>
+                        <option value="pets">Уй жаныбарлары</option>
+                        <option value="wild">Жапайы жаныбарлар</option>
+                        <option value="facts">Кызыктуу фактылар</option>
+                    </select>
+                </div>
 
-                    <div class="form-group">
-                        <label>Эмодзи (иконка):</label>
-                        <input type="text" id="icon" placeholder="🦊" required>
-                        <small style="color: #888;">Мисалы: 🦊, 🐯, 🦒, 🦓, 🐨, 🦘, 🦫, 🦦, 🦥</small>
-                    </div>
+                <div class="form-group">
+                    <label>Эмодзи (иконка):</label>
+                    <input type="text" id="icon" placeholder="🦊" required>
+                    <small style="color: #888;">Мисалы: 🦊, 🐯, 🦒, 🦓, 🐨, 🦘, 🦫, 🦦, 🦥</small>
+                </div>
 
-                    <div class="form-group">
-                        <label>Жаныбардын аты:</label>
-                        <input type="text" id="name" placeholder="Мисалы: Түлкү" required>
-                    </div>
+                <div class="form-group">
+                    <label>Жаныбардын аты:</label>
+                    <input type="text" id="name" placeholder="Мисалы: Түлкү" required>
+                </div>
 
-                    <div class="form-group">
-                        <label>Жаныбар жөнүндө маалымат:</label>
-                        <textarea id="description" placeholder="Жаныбардын сыпаттамасын жазыңыз..." required></textarea>
-                    </div>
+                <div class="form-group">
+                    <label>Жаныбар жөнүндө маалымат:</label>
+                    <textarea id="description" placeholder="Жаныбардын сыпаттамасын жазыңыз..." required></textarea>
+                </div>
 
-                    <div class="form-group">
-                        <label>Кызыктуу факт:</label>
-                        <textarea id="fact" placeholder="Кызыктуу фактыны жазыңыз..." required></textarea>
-                    </div>
+                <div class="form-group">
+                    <label>Кызыктуу факт:</label>
+                    <textarea id="fact" placeholder="Кызыктуу фактыны жазыңыз..." required></textarea>
+                </div>
 
-                    <button type="button" class="btn-submit" onclick="addAnimal()">➕ Жаныбарды кошуу</button>
-                </form>
+                <button type="button" class="btn-submit" id="add-btn">➕ Жаныбарды кошуу</button>
             </div>
         </div>
     </div>
@@ -426,168 +402,209 @@
         <p style="margin-top: 10px;">© 2024 Жаныбарлар дүйнөсү - Firebase 🔥</p>
     </footer>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // Firebase конфигурация
-        const firebaseConfig = {
-            apiKey: "AIzaSyB7Rz48zMZxDTiMjxCqjpgKWZa82VY7DCY",
-            authDomain: "animals-e9bd5.firebaseapp.com",
-            databaseURL: "https://animals-e9bd5-default-rtdb.firebaseio.com",
-            projectId: "animals-e9bd5",
-            storageBucket: "animals-e9bd5.firebasestorage.app",
-            messagingSenderId: "242209700234",
-            appId: "1:242209700234:web:27f75d95fe751e4bfdf073"
-        };
+        const App = {
+            db: null,
+            animals: {
+                pets: [
+                    { icon: '🐕', name: 'Ит', description: 'Ит - адамдын эң жакын досу. Алар адалдуу, акылдуу жана өзгөчө ишенимдүү жандыктар.', fact: 'Иттердин дүйнөдө 300дөн ашык түрү бар!' },
+                    { icon: '🐈', name: 'Мышык', description: 'Мышыктар көркөм, таза жана өз алдынча жаныбарлар.', fact: 'Мышыктар караңгыда 6 эсе жакшы көрөт.' },
+                    { icon: '🐦', name: 'Куш', description: 'Уй куштары кооздук менен кубаныч берет.', fact: 'Тотулар 100дөн ашык сөз үйрөнөт!' },
+                    { icon: '🐰', name: 'Коён', description: 'Коёндор жумшак достук жаныбарлар.', fact: 'Коёндордун тиштери өмүр бою өсөт!' }
+                ],
+                wild: [
+                    { icon: '🦁', name: 'Арстан', description: 'Арстан - жаныбарлардын падышасы!', fact: 'Арстандын күүрөгөнү 8 км угулат!' },
+                    { icon: '🐘', name: 'Пил', description: 'Пил - эң чоң жаныбар.', fact: 'Пилдин тумшугунда 40,000 булчуң!' },
+                    { icon: '🐻', name: 'Аюу', description: 'Аюулар кучтүү жырткычтар.', fact: 'Аюулар кышында уктайт.' },
+                    { icon: '🦅', name: 'Бүркүт', description: 'Бүркүт - көк падышасы.', fact: 'Бүркүт 320 км/саат учат!' },
+                    { icon: '🐺', name: 'Карышкыр', description: 'Карышкырлар акылдуу жырткычтар.', fact: 'Карышкырлар топто жашайт.' },
+                    { icon: '🦌', name: 'Марал', description: 'Марал кооз жаныбар.', fact: 'Маралдын мүйүзү өсөт!' }
+                ],
+                facts: [
+                    { icon: '🐆', name: 'Ылдамдык чемпиону', description: 'Гепард - эң ылдам!', fact: 'Гепард 3 секундда 100 км/саат!' },
+                    { icon: '🐋', name: 'Гигант', description: 'Кит - эң чоң!', fact: 'Киттин жүрөгү машина өлчөмүндө!' },
+                    { icon: '🦜', name: 'Акылдуулар', description: 'Дельфин акылдуу!', fact: 'Дельфин уктаганда мээси ачык!' }
+                ]
+            },
 
-        // Firebase баштоо
-        let db;
-        let myAnimals = {
-            pets: [
-                { icon: '🐕', name: 'Ит', description: 'Ит - адамдын эң жакын досу. Алар адалдуу, акылдуу жана өзгөчө ишенимдүү жандыктар.', fact: 'Иттердин дүйнөдө 300дөн ашык түрү бар!' },
-                { icon: '🐈', name: 'Мышык', description: 'Мышыктар көркөм, таза жана өз алдынча жаныбарлар.', fact: 'Мышыктар караңгыда адамга караганда 6 эсе жакшы көрөт.' },
-                { icon: '🐦', name: 'Куш', description: 'Уй куштары кооздук менен адамдарга кубаныч берет.', fact: 'Кээ бир тоту түрлөрү 100дөн ашык сөз үйрөнөт!' },
-                { icon: '🐰', name: 'Коён', description: 'Коёндор жумшак жана достук жаныбарлар.', fact: 'Коёндордун тиштери өмүр бою өсөт!' }
-            ],
-            wild: [
-                { icon: '🦁', name: 'Арстан', description: 'Арстан - жаныбарлардын падышасы!', fact: 'Арстандын күүрөгөнү 8 км аралыкка угулат!' },
-                { icon: '🐘', name: 'Пил', description: 'Пил - жердеги эң чоң жаныбар.', fact: 'Пилдердин тумшугунда 40,000 булчуң бар!' },
-                { icon: '🐻', name: 'Аюу', description: 'Аюулар кучтүү жырткычтар.', fact: 'Аюулар кышында уйкуга кетет.' },
-                { icon: '🦅', name: 'Бүркүт', description: 'Бүркүт - көктөгү падышасы.', fact: 'Бүркүт 320 км/саат ылдамдыкка жетет!' },
-                { icon: '🐺', name: 'Карышкыр', description: 'Карышкырлар акылдуу жырткычтар.', fact: 'Карышкырлар топ болуп жашайт.' },
-                { icon: '🦌', name: 'Марал', description: 'Марал - кооз жаныбар.', fact: 'Маралдардын мүйүздөрү жыл сайын өсөт!' }
-            ],
-            facts: [
-                { icon: '🐆', name: 'Ылдамдык чемпиондору', description: 'Гепард - эң ылдам жаныбар!', fact: 'Гепард 3 секундда 100 км/саат ылдамдайт!' },
-                { icon: '🐋', name: 'Планетанын гиганттары', description: 'Көк кит - эң чоң жаныбар.', fact: 'Киттин жүрөгү машина өлчөмүндө!' },
-                { icon: '🦜', name: 'Акылдуу жаныбарлар', description: 'Дельфиндер өтө акылдуу!', fact: 'Дельфиндер уктаганда мээсинин бир жагы ачык калат!' }
-            ]
-        };
+            init() {
+                this.updateStatus('🔄 Жүктөлүүдө...', 'loading');
+                this.initFirebase();
+                this.setupEventListeners();
+                this.renderAll();
+            },
 
-        function initFirebase() {
-            try {
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.database();
-                updateStatus('✅ Firebase жалганган', '');
-                loadFromFirebase();
-            } catch (error) {
-                console.error('Firebase ката:', error);
-                updateStatus('❌ Firebase катасы', 'error');
-                renderAll();
-            }
-        }
-
-        function updateStatus(msg, type = '') {
-            const el = document.getElementById('firebase-status');
-            el.className = 'firebase-status ' + type;
-            el.textContent = msg;
-        }
-
-        function loadFromFirebase() {
-            updateStatus('🔄 Жүктөлүүдө...', 'loading');
-            db.ref('animals').once('value').then(snap => {
-                if (snap.exists()) {
-                    myAnimals = snap.val();
-                } else {
-                    db.ref('animals').set(myAnimals);
+            initFirebase() {
+                try {
+                    const config = {
+                        apiKey: "AIzaSyB7Rz48zMZxDTiMjxCqjpgKWZa82VY7DCY",
+                        authDomain: "animals-e9bd5.firebaseapp.com",
+                        databaseURL: "https://animals-e9bd5-default-rtdb.firebaseio.com",
+                        projectId: "animals-e9bd5",
+                        storageBucket: "animals-e9bd5.firebasestorage.app",
+                        messagingSenderId: "242209700234",
+                        appId: "1:242209700234:web:27f75d95fe751e4bfdf073"
+                    };
+                    
+                    firebase.initializeApp(config);
+                    this.db = firebase.database();
+                    this.loadFromFirebase();
+                } catch (err) {
+                    console.error('Firebase:', err);
+                    this.updateStatus('✅ Локалдуу режим', '');
                 }
-                updateStatus('✅ Firebase иштеп жатат', '');
-                renderAll();
+            },
+
+            loadFromFirebase() {
+                if (!this.db) return;
                 
-                db.ref('animals').on('value', snap => {
+                this.db.ref('animals').once('value').then(snap => {
                     if (snap.exists()) {
-                        myAnimals = snap.val();
-                        renderAll();
+                        this.animals = snap.val();
+                    } else {
+                        this.db.ref('animals').set(this.animals);
+                    }
+                    this.updateStatus('✅ Firebase жалганган', '');
+                    this.renderAll();
+                    
+                    this.db.ref('animals').on('value', snap => {
+                        if (snap.exists()) {
+                            this.animals = snap.val();
+                            this.renderAll();
+                        }
+                    });
+                }).catch(err => {
+                    console.error(err);
+                    this.updateStatus('❌ Ката', 'error');
+                    this.renderAll();
+                });
+            },
+
+            setupEventListeners() {
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const section = e.target.getAttribute('data-section');
+                        this.showSection(section);
+                    });
+                });
+
+                document.getElementById('add-btn').addEventListener('click', () => {
+                    this.addAnimal();
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('btn-delete')) {
+                        const cat = e.target.dataset.cat;
+                        const idx = parseInt(e.target.dataset.idx);
+                        this.deleteAnimal(cat, idx);
                     }
                 });
-            }).catch(err => {
-                console.error(err);
-                updateStatus('❌ Ката: ' + err.message, 'error');
-                renderAll();
-            });
-        }
+            },
 
-        function saveToFirebase() {
-            return db.ref('animals').set(myAnimals);
-        }
-
-        function renderAll() {
-            ['pets', 'wild', 'facts'].forEach(cat => {
-                const grid = document.getElementById(cat + '-grid');
-                grid.innerHTML = '';
-                myAnimals[cat].forEach((animal, i) => {
-                    const card = document.createElement('div');
-                    card.className = 'animal-card';
-                    card.innerHTML = `
-                        <button class="btn-delete" onclick="deleteAnimal('${cat}', ${i})">🗑️ Өчүрүү</button>
-                        <div class="animal-icon">${animal.icon}</div>
-                        <div class="animal-name">${animal.name}</div>
-                        <div class="animal-info">
-                            <p>${animal.description}</p>
-                            <div class="fact-box">
-                                <div class="fact-title">Кызыктуу факт:</div>
-                                ${animal.fact}
-                            </div>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            });
-        }
-
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        async function addAnimal() {
-            const cat = document.getElementById('category').value;
-            const icon = document.getElementById('icon').value;
-            const name = document.getElementById('name').value;
-            const desc = document.getElementById('description').value;
-            const fact = document.getElementById('fact').value;
-
-            if (!cat || !icon || !name || !desc || !fact) {
-                alert('Бардык талааларды толтуруңуз!');
-                return;
-            }
-
-            myAnimals[cat].push({ icon, name, description: desc, fact });
-
-            try {
-                await saveToFirebase();
-                document.getElementById('category').value = '';
-                document.getElementById('icon').value = '';
-                document.getElementById('name').value = '';
-                document.getElementById('description').value = '';
-                document.getElementById('fact').value = '';
-
-                document.getElementById('success-msg').classList.add('show');
-                setTimeout(() => document.getElementById('success-msg').classList.remove('show'), 3000);
+            showSection(id) {
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                 
-                const btn = document.querySelector('.nav-btn[onclick*="' + cat + '"]');
-                if (btn) btn.click();
-            } catch (err) {
-                alert('Ката: ' + err.message);
-            }
-        }
+                document.getElementById(id).classList.add('active');
+                document.querySelector(`[data-section="${id}"]`).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
 
-        async function deleteAnimal(cat, idx) {
-            if (confirm('Өчүрүүнү каалайсызбы?')) {
-                myAnimals[cat].splice(idx, 1);
+            renderAll() {
+                ['pets', 'wild', 'facts'].forEach(cat => {
+                    const grid = document.getElementById(cat + '-grid');
+                    grid.innerHTML = '';
+                    
+                    this.animals[cat].forEach((animal, i) => {
+                        const card = document.createElement('div');
+                        card.className = 'animal-card';
+                        card.innerHTML = `
+                            <button class="btn-delete" data-cat="${cat}" data-idx="${i}">🗑️ Өчүрүү</button>
+                            <div class="animal-icon">${animal.icon}</div>
+                            <div class="animal-name">${animal.name}</div>
+                            <div class="animal-info">
+                                <p>${animal.description}</p>
+                                <div class="fact-box">
+                                    <div class="fact-title">Кызыктуу факт:</div>
+                                    ${animal.fact}
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                });
+            },
+
+            async addAnimal() {
+                const cat = document.getElementById('category').value;
+                const icon = document.getElementById('icon').value;
+                const name = document.getElementById('name').value;
+                const desc = document.getElementById('description').value;
+                const fact = document.getElementById('fact').value;
+
+                if (!cat || !icon || !name || !desc || !fact) {
+                    alert('Бардык талааларды толтуруңуз!');
+                    return;
+                }
+
+                const btn = document.getElementById('add-btn');
+                btn.disabled = true;
+                btn.textContent = '⏳ Сакталууда...';
+
+                this.animals[cat].push({ icon, name, description: desc, fact });
+
                 try {
-                    await saveToFirebase();
+                    if (this.db) {
+                        await this.db.ref('animals').set(this.animals);
+                    }
+                    
+                    document.getElementById('category').value = '';
+                    document.getElementById('icon').value = '';
+                    document.getElementById('name').value = '';
+                    document.getElementById('description').value = '';
+                    document.getElementById('fact').value = '';
+
+                    const msg = document.getElementById('success-msg');
+                    msg.classList.add('show');
+                    setTimeout(() => msg.classList.remove('show'), 3000);
+
+                    this.showSection(cat);
+                    this.renderAll();
+                } catch (err) {
+                    alert('Ката: ' + err.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = '➕ Жаныбарды кошуу';
+                }
+            },
+
+            async deleteAnimal(cat, idx) {
+                if (!confirm('Өчүрүүнү каалайсызбы?')) return;
+
+                this.animals[cat].splice(idx, 1);
+                
+                try {
+                    if (this.db) {
+                        await this.db.ref('animals').set(this.animals);
+                    }
+                    this.renderAll();
                 } catch (err) {
                     alert('Ката: ' + err.message);
                 }
-            }
-        }
+            },
 
-        window.addEventListener('load', initFirebase);
+            updateStatus(msg, type = '') {
+                const el = document.getElementById('firebase-status');
+                el.className = 'firebase-status ' + type;
+                el.textContent = msg;
+            }
+        };
+
+        window.addEventListener('load', () => App.init());
     </script>
 </body>
 </html>
