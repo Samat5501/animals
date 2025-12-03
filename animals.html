@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Жаныбарлар дүйнөсү </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .firebase-status {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 15px;
+            background: #27ae60;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .firebase-status.loading {
+            background: #f39c12;
+        }
+
+        .firebase-status.error {
+            background: #e74c3c;
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn.active {
+            background: #764ba2;
+        }
+
+        .admin-btn {
+            background: #e74c3c;
+        }
+
+        .admin-btn:hover {
+            background: #c0392b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .animal-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .animal-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+        }
+
+        .animal-icon {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .animal-name {
+            font-size: 1.8em;
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .animal-info {
+            color: #555;
+            line-height: 1.6;
+            font-size: 1.05em;
+        }
+
+        .fact-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #e17055;
+        }
+
+        .fact-title {
+            font-weight: bold;
+            color: #d63031;
+            margin-bottom: 8px;
+        }
+
+        .intro-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .intro-section h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .intro-section p {
+            color: #555;
+            font-size: 1.2em;
+            line-height: 1.8;
+        }
+
+        .admin-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .admin-panel h2 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #555;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .download-notice {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            color: #856404;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .download-notice h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .download-notice ol {
+            text-align: left;
+            max-width: 600px;
+            margin: 15px auto;
+            line-height: 1.8;
+        }
+
+        footer {
+            background: rgba(255, 255, 255, 0.95);
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🐾 Жаныбарлар дүйнөсү 🦁</h1>
+        <p class="subtitle">Уй жаныбарлары жана жапайы жаныбарлар жөнүндө</p>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" onclick="showSection('home')">Башкы бет</button>
+        <button class="nav-btn" onclick="showSection('pets')">Уй жаныбарлары</button>
+        <button class="nav-btn" onclick="showSection('wild')">Жапайы жаныбарлар</button>
+        <button class="nav-btn" onclick="showSection('facts')">Кызыктуу фактылар</button>
+        <button class="nav-btn admin-btn" onclick="showSection('admin')">👤 Админ панель</button>
+    </nav>
+
+    <div class="container">
+        <div id="home" class="section active">
+            <div class="intro-section">
+                <h2>Жаныбарлар дүйнөсүнө кош келиңиз!</h2>
+                <p>Бул сайтта сиз уй жаныбарлары жана жапайы жаныбарлар жөнүндө көптөгөн кызыктуу маалыматтарды таба аласыз. Жаныбарлар биздин планетабыздын эң кереметтүү жандыктары!</p>
+                <p style="margin-top: 15px;">👆 Жогорудагы баскычтарды басып, түрдүү жаныбарлар менен таанышыңыз!</p>
+                <p style="margin-top: 15px; color: #e74c3c; font-weight: bold;">🔥 Firebase менен - Маалыматтар булутта коопсуз сакталат!</p>
+            </div>
+        </div>
+
+        <div id="pets" class="section">
+            <div class="animals-grid" id="pets-grid"></div>
+        </div>
+
+        <div id="wild" class="section">
+            <div class="animals-grid" id="wild-grid"></div>
+        </div>
+
+        <div id="facts" class="section">
+            <div class="intro-section">
+                <h2>🌟 Жаныбарлар жөнүндө кызыктуу фактылар 🌟</h2>
+            </div>
+            <div class="animals-grid" id="facts-grid"></div>
+        </div>
+
+        <div id="admin" class="section">
+            <div class="admin-panel">
+                <h2>👤 Админ панель - Жаңы жаныбар кошуу</h2>
+                
+                <div id="success-msg" class="success-message">
+                    ✅ Жаныбар Firebase'ге жазылды!
+                </div>
+
+                <form id="animal-form" onsubmit="return false;">
+                    <div class="form-group">
+                        <label>Категория:</label>
+                        <select id="category" required>
+                            <option value="">Тандаңыз...</option>
+                            <option value="pets">Уй жаныбарлары</option>
+                            <option value="wild">Жапайы жаныбарлар</option>
+                            <option value="facts">Кызыктуу фактылар</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Эмодзи (иконка):</label>
+                        <input type="text" id="icon" placeholder="🦊" required>
+                        <small style="color: #888;">Мисалы: 🦊, 🐯, 🦒, 🦓, 🐨, 🦘, 🦫, 🦦, 🦥</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Жаныбардын аты:</label>
+                        <input type="text" id="name" placeholder="Мисалы: Түлкү" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Жаныбар жөнүндө маалымат:</label>
+                        <textarea id="description" placeholder="Жаныбардын сыпаттамасын жазыңыз..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Кызыктуу факт:</label>
+                        <textarea id="fact" placeholder="Кызыктуу фактыны жазыңыз..." required></textarea>
+                    </div>
+
+                    <button type="button" class="btn-submit" onclick="addAnimal()">➕ Жаныбарды кошуу</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>🌍 Жаныбарларды сүйүп, аларды коргойлу! 💚</p>
+        <p style="margin-top: 10px;">© 2024 Жаныбарлар дүйнөсү - Firebase 🔥</p>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // Firebase конфигурация
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7Rz48zMZxDTiMjxCqjpgKWZa82VY7DCY",
+            authDomain: "animals-e9bd5.firebaseapp.com",
+            databaseURL: "https://animals-e9bd5-default-rtdb.firebaseio.com",
+            projectId: "animals-e9bd5",
+            storageBucket: "animals-e9bd5.firebasestorage.app",
+            messagingSenderId: "242209700234",
+            appId: "1:242209700234:web:27f75d95fe751e4bfdf073"
+        };
+
+        // Firebase баштоо
+        let db;
+        let myAnimals = {
+            pets: [
+                { icon: '🐕', name: 'Ит', description: 'Ит - адамдын эң жакын досу. Алар адалдуу, акылдуу жана өзгөчө ишенимдүү жандыктар.', fact: 'Иттердин дүйнөдө 300дөн ашык түрү бар!' },
+                { icon: '🐈', name: 'Мышык', description: 'Мышыктар көркөм, таза жана өз алдынча жаныбарлар.', fact: 'Мышыктар караңгыда адамга караганда 6 эсе жакшы көрөт.' },
+                { icon: '🐦', name: 'Куш', description: 'Уй куштары кооздук менен адамдарга кубаныч берет.', fact: 'Кээ бир тоту түрлөрү 100дөн ашык сөз үйрөнөт!' },
+                { icon: '🐰', name: 'Коён', description: 'Коёндор жумшак жана достук жаныбарлар.', fact: 'Коёндордун тиштери өмүр бою өсөт!' }
+            ],
+            wild: [
+                { icon: '🦁', name: 'Арстан', description: 'Арстан - жаныбарлардын падышасы!', fact: 'Арстандын күүрөгөнү 8 км аралыкка угулат!' },
+                { icon: '🐘', name: 'Пил', description: 'Пил - жердеги эң чоң жаныбар.', fact: 'Пилдердин тумшугунда 40,000 булчуң бар!' },
+                { icon: '🐻', name: 'Аюу', description: 'Аюулар кучтүү жырткычтар.', fact: 'Аюулар кышында уйкуга кетет.' },
+                { icon: '🦅', name: 'Бүркүт', description: 'Бүркүт - көктөгү падышасы.', fact: 'Бүркүт 320 км/саат ылдамдыкка жетет!' },
+                { icon: '🐺', name: 'Карышкыр', description: 'Карышкырлар акылдуу жырткычтар.', fact: 'Карышкырлар топ болуп жашайт.' },
+                { icon: '🦌', name: 'Марал', description: 'Марал - кооз жаныбар.', fact: 'Маралдардын мүйүздөрү жыл сайын өсөт!' }
+            ],
+            facts: [
+                { icon: '🐆', name: 'Ылдамдык чемпиондору', description: 'Гепард - эң ылдам жаныбар!', fact: 'Гепард 3 секундда 100 км/саат ылдамдайт!' },
+                { icon: '🐋', name: 'Планетанын гиганттары', description: 'Көк кит - эң чоң жаныбар.', fact: 'Киттин жүрөгү машина өлчөмүндө!' },
+                { icon: '🦜', name: 'Акылдуу жаныбарлар', description: 'Дельфиндер өтө акылдуу!', fact: 'Дельфиндер уктаганда мээсинин бир жагы ачык калат!' }
+            ]
+        };
+
+        function initFirebase() {
+            try {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.database();
+                updateStatus('✅ Firebase жалганган', '');
+                loadFromFirebase();
+            } catch (error) {
+                console.error('Firebase ката:', error);
+                updateStatus('❌ Firebase катасы', 'error');
+                renderAll();
+            }
+        }
+
+        function updateStatus(msg, type = '') {
+            const el = document.getElementById('firebase-status');
+            el.className = 'firebase-status ' + type;
+            el.textContent = msg;
+        }
+
+        function loadFromFirebase() {
+            updateStatus('🔄 Жүктөлүүдө...', 'loading');
+            db.ref('animals').once('value').then(snap => {
+                if (snap.exists()) {
+                    myAnimals = snap.val();
+                } else {
+                    db.ref('animals').set(myAnimals);
+                }
+                updateStatus('✅ Firebase иштеп жатат', '');
+                renderAll();
+                
+                db.ref('animals').on('value', snap => {
+                    if (snap.exists()) {
+                        myAnimals = snap.val();
+                        renderAll();
+                    }
+                });
+            }).catch(err => {
+                console.error(err);
+                updateStatus('❌ Ката: ' + err.message, 'error');
+                renderAll();
+            });
+        }
+
+        function saveToFirebase() {
+            return db.ref('animals').set(myAnimals);
+        }
+
+        function renderAll() {
+            ['pets', 'wild', 'facts'].forEach(cat => {
+                const grid = document.getElementById(cat + '-grid');
+                grid.innerHTML = '';
+                myAnimals[cat].forEach((animal, i) => {
+                    const card = document.createElement('div');
+                    card.className = 'animal-card';
+                    card.innerHTML = `
+                        <button class="btn-delete" onclick="deleteAnimal('${cat}', ${i})">🗑️ Өчүрүү</button>
+                        <div class="animal-icon">${animal.icon}</div>
+                        <div class="animal-name">${animal.name}</div>
+                        <div class="animal-info">
+                            <p>${animal.description}</p>
+                            <div class="fact-box">
+                                <div class="fact-title">Кызыктуу факт:</div>
+                                ${animal.fact}
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            });
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function addAnimal() {
+            const cat = document.getElementById('category').value;
+            const icon = document.getElementById('icon').value;
+            const name = document.getElementById('name').value;
+            const desc = document.getElementById('description').value;
+            const fact = document.getElementById('fact').value;
+
+            if (!cat || !icon || !name || !desc || !fact) {
+                alert('Бардык талааларды толтуруңуз!');
+                return;
+            }
+
+            myAnimals[cat].push({ icon, name, description: desc, fact });
+
+            try {
+                await saveToFirebase();
+                document.getElementById('category').value = '';
+                document.getElementById('icon').value = '';
+                document.getElementById('name').value = '';
+                document.getElementById('description').value = '';
+                document.getElementById('fact').value = '';
+
+                document.getElementById('success-msg').classList.add('show');
+                setTimeout(() => document.getElementById('success-msg').classList.remove('show'), 3000);
+                
+                const btn = document.querySelector('.nav-btn[onclick*="' + cat + '"]');
+                if (btn) btn.click();
+            } catch (err) {
+                alert('Ката: ' + err.message);
+            }
+        }
+
+        async function deleteAnimal(cat, idx) {
+            if (confirm('Өчүрүүнү каалайсызбы?')) {
+                myAnimals[cat].splice(idx, 1);
+                try {
+                    await saveToFirebase();
+                } catch (err) {
+                    alert('Ката: ' + err.message);
+                }
+            }
+        }
+
+        window.addEventListener('load', initFirebase);
+    </script>
+</body>
+</html>

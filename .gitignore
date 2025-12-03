@@ -1,0 +1,8 @@
+node_modules/
+.env
+.DS_Store
+dist/
+/.firebase/
+firebase-debug.log
+npm-debug.log*
+package-lock.json
